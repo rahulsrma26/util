@@ -37,7 +37,7 @@
         : "--:--";
     }
     function reset() {
-      currentTime = urlParams.get("time");
+      currentTime = urlParams.get("time") ?? 60;
       $("#time").text(secondsToTimeStr(currentTime));
       $("#clock").removeClass("dark");
       $("#clock").addClass("light");
