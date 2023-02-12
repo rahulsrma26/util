@@ -18,8 +18,11 @@
 
   <body>
     <main>
-      <div id="time" class="timer">00:00</div>
-      <button id="next">Next</button>
+      <h1 id="title"></h1>
+      <div id="clock">
+        <div id="time" class="timer">00:00</div>
+      </div>
+      <button id="next"></button>
     </main>
   </body>
   <script>
@@ -33,20 +36,31 @@
             .padStart(2, "0")}`
         : "--:--";
     }
+    function reset() {
+      currentTime = urlParams.get("time");
+      $("#time").text(secondsToTimeStr(currentTime));
+      $("#clock").removeClass("dark");
+      $("#clock").addClass("light");
+    }
     $("document").ready(function () {
       urlParams = new URLSearchParams(window.location.search);
       for (const [key, value] of urlParams) {
         console.log(key, value);
       }
-      currentTime = urlParams.get("time");
-      $("#time").text(secondsToTimeStr(currentTime));
+      $("#title").text(urlParams.get("title") ?? "Timer Utility");
+      $("#next").text("Start");
+      reset();
     });
     $("#next").click(function () {
       if (timer) clearInterval(timer);
-      currentTime = urlParams.get("time");
-      $("#time").text(secondsToTimeStr(currentTime));
+      $("#next").text(urlParams.get("button") ?? "Pass");
+      reset();
       timer = setInterval(function () {
         currentTime -= 1;
+        if (currentTime == -1) {
+          $("#clock").removeClass("light");
+          $("#clock").addClass("dark");
+        }
         $("#time").text(secondsToTimeStr(Math.abs(currentTime)));
       }, 1000);
     });

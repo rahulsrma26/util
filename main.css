@@ -14,11 +14,37 @@ main {
   height: 100%;
 }
 
-.timer {
-  font-size: 40vw;
-  font-family: "LCD", sans-serif;
-  background-color: #6a785a;
+#clock {
+  width: 100%;
+}
+
+#title {
+  text-align: center;
+}
+
+.light {
   color: #222222;
+  background-color: #6a785a;
+  transition: 0.4s ease-in-out;
+}
+
+.dark {
+  color: #3feb0e;
+  background-color: #05090b;
+  transition: 0.4s ease-in-out;
+}
+
+.timer {
+  padding-right: 5vw;
+  text-align: center;
+  font-size: 35vw;
+  font-family: "LCD", sans-serif;
+}
+
+@media (orientation: landscape) {
+  .timer {
+    font-size: 35vh;
+  }
 }
 
 button {
