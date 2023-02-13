@@ -17,15 +17,21 @@
   </head>
 
   <body>
-    <main>
+    <main class="vstack">
       <h1 id="title"></h1>
       <div id="clock">
         <div id="time" class="timer">00:00</div>
       </div>
-      <button id="next"></button>
+      <div class="hstack xltext">
+        <button id="next">⏭</button>
+        <button id="pause" disabled>⏸</button>
+      </div>
     </main>
   </body>
   <script>
+    const playSymbol = "⏵";
+    const pauseSymbol = "⏸";
+    const nextSymbol = "⏭";
     var currentTime = 0;
     var timer = null;
     var urlParams = {};
@@ -48,20 +54,27 @@
         console.log(key, value);
       }
       $("#title").text(urlParams.get("title") ?? "Timer Utility");
-      $("#next").text("Start");
       reset();
+    });
+    $("#pause").click(function () {
+      const isPaused = $("#pause").text() === pauseSymbol;
+      $("#pause").text(isPaused ? playSymbol : pauseSymbol);
     });
     $("#next").click(function () {
       if (timer) clearInterval(timer);
-      $("#next").text(urlParams.get("button") ?? "Pass");
+      $("#next").text(urlParams.get("button") ?? nextSymbol);
+      $("#pause").prop("disabled", false);
+      $("#pause").text(pauseSymbol);
       reset();
       timer = setInterval(function () {
-        currentTime -= 1;
-        if (currentTime == -1) {
-          $("#clock").removeClass("light");
-          $("#clock").addClass("dark");
+        if ($("#pause").text() === pauseSymbol) {
+          currentTime -= 1;
+          if (currentTime == -1) {
+            $("#clock").removeClass("light");
+            $("#clock").addClass("dark");
+          }
+          $("#time").text(secondsToTimeStr(Math.abs(currentTime)));
         }
-        $("#time").text(secondsToTimeStr(Math.abs(currentTime)));
       }, 1000);
     });
   </script>
