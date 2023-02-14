@@ -19,6 +19,7 @@ main {
 
 #title {
   text-align: center;
+  font-size: max(1rem, min(5vh, 5vw));
 }
 
 .vstack {
@@ -33,12 +34,12 @@ main {
 
 .light {
   color: #222222;
-  background-color: #6a785a;
+  background-color: #8a9c76;
   transition: 0.4s ease-in-out;
 }
 
 .dark {
-  color: #3feb0e;
+  color: #ce2424;
   background-color: #05090b;
   transition: 0.4s ease-in-out;
 }
@@ -65,4 +66,5 @@ main {
 
 button {
   width: 100%;
+  padding: 0.2em;
 }

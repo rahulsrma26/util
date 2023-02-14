@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/iconfont/tabler-icons.min.css"
+    />
     <script
       src="https://code.jquery.com/jquery-3.6.3.slim.min.js"
       integrity="sha256-ZwqZIVdD3iXNyGHbSYdsmWP//UBokj2FHAxKuSBKDSo="
@@ -23,15 +27,13 @@
         <div id="time" class="timer">00:00</div>
       </div>
       <div class="hstack xltext">
-        <button id="next">⏭</button>
-        <button id="pause" disabled>⏸</button>
+        <button id="next" class="ti ti-player-skip-forward"></button>
+        <button id="pause" class="ti ti-player-pause" disabled></button>
       </div>
     </main>
   </body>
   <script>
-    const playSymbol = "⏵";
-    const pauseSymbol = "⏸";
-    const nextSymbol = "⏭";
+    var isPaused = true;
     var currentTime = 0;
     var timer = null;
     var urlParams = {};
@@ -42,32 +44,37 @@
             .padStart(2, "0")}`
         : "--:--";
     }
+    function updatePauseButton(state) {
+      isPaused = state;
+      if (isPaused) {
+        $("#pause").removeClass("ti-player-pause");
+        $("#pause").addClass("ti-player-play");
+      } else {
+        $("#pause").removeClass("ti-player-play");
+        $("#pause").addClass("ti-player-pause");
+      }
+    }
     function reset() {
       currentTime = urlParams.get("time") ?? 60;
       $("#time").text(secondsToTimeStr(currentTime));
       $("#clock").removeClass("dark");
       $("#clock").addClass("light");
+      updatePauseButton(false);
     }
     $("document").ready(function () {
       urlParams = new URLSearchParams(window.location.search);
-      for (const [key, value] of urlParams) {
-        console.log(key, value);
-      }
       $("#title").text(urlParams.get("title") ?? "Timer Utility");
       reset();
     });
     $("#pause").click(function () {
-      const isPaused = $("#pause").text() === pauseSymbol;
-      $("#pause").text(isPaused ? playSymbol : pauseSymbol);
+      updatePauseButton(!isPaused);
     });
     $("#next").click(function () {
       if (timer) clearInterval(timer);
-      $("#next").text(urlParams.get("button") ?? nextSymbol);
       $("#pause").prop("disabled", false);
-      $("#pause").text(pauseSymbol);
       reset();
       timer = setInterval(function () {
-        if ($("#pause").text() === pauseSymbol) {
+        if (!isPaused) {
           currentTime -= 1;
           if (currentTime == -1) {
             $("#clock").removeClass("light");
