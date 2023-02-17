@@ -34,6 +34,9 @@
   </body>
   <script>
     var isPaused = true;
+    var title = "Timer Utility";
+    var timeLimit = 60;
+    var shake = 30;
     var currentTime = 0;
     var timer = null;
     var urlParams = {};
@@ -55,15 +58,19 @@
       }
     }
     function reset() {
-      currentTime = urlParams.get("time") ?? 60;
+      currentTime = timeLimit;
       $("#time").text(secondsToTimeStr(currentTime));
       $("#clock").removeClass("dark");
       $("#clock").addClass("light");
+      $("#time").removeClass("shakeit");
       updatePauseButton(false);
     }
     $("document").ready(function () {
       urlParams = new URLSearchParams(window.location.search);
-      $("#title").text(urlParams.get("title") ?? "Timer Utility");
+      title = urlParams.get("title") ?? title;
+      timeLimit = urlParams.get("time") ?? timeLimit;
+      shake = urlParams.get("shake") ?? timeLimit / 2;
+      $("#title").text(title);
       reset();
     });
     $("#pause").click(function () {
@@ -79,6 +86,8 @@
           if (currentTime == -1) {
             $("#clock").removeClass("light");
             $("#clock").addClass("dark");
+          } else if (currentTime < -shake) {
+            $("#time").addClass("shakeit");
           }
           $("#time").text(secondsToTimeStr(Math.abs(currentTime)));
         }
